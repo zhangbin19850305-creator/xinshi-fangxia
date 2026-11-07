@@ -50,6 +50,41 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Enable GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -u
+          pages_api() {
+            method="$1"
+            body="${2:-}"
+            if [ -n "$body" ]; then
+              code=$(curl -sS -o /tmp/pages-body.json -w '%{http_code}' -X "$method" \
+                -H "Authorization: Bearer ${GH_TOKEN}" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                -H "Content-Type: application/json" \
+                -d "$body" \
+                "https://api.github.com/repos/${REPO}/pages")
+            else
+              code=$(curl -sS -o /tmp/pages-body.json -w '%{http_code}' -X "$method" \
+                -H "Authorization: Bearer ${GH_TOKEN}" \
+                -H "Accept: application/vnd.github+json" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "https://api.github.com/repos/${REPO}/pages")
+            fi
+            echo "$method /pages -> $code"
+            python3 -c 'import json; d=json.load(open("/tmp/pages-body.json")); keys=("message","html_url","build_type","public","status","documentation_url"); print(json.dumps({k:d.get(k) for k in keys if isinstance(d, dict) and k in d}, ensure_ascii=False))'
+            printf '%s' "$code" > /tmp/pages-code.txt
+          }
+          pages_api GET
+          code=$(cat /tmp/pages-code.txt)
+          if [ "$code" = "404" ]; then
+            pages_api POST '{"build_type":"workflow"}'
+          fi
+          pages_api PUT '{"build_type":"workflow","public":true}'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
