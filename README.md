@@ -29,8 +29,10 @@ npm run preview
 
 ## 公开页面
 
-推到 `main` 后，GitHub Actions 会构建并发布到 GitHub Pages：
+推到 `main` 后，GitHub Actions 会构建并发布到：
 
 https://zhangbin19850305-creator.github.io/xinshi-fangxia/
 
 Pages 构建使用站点前缀 `/xinshi-fangxia/`。本地 `npm run dev` 仍在 `/`。没有后端，页面内容默认不保存。
+
+仓库管理员需要先在 Settings → Pages 里把 Source 设为 GitHub Actions。当前的 Actions 令牌只能部署，不能代替管理员打开 Pages。

@@ -82,8 +82,13 @@ jobs:
           code=$(cat /tmp/pages-code.txt)
           if [ "$code" = "404" ]; then
             pages_api POST '{"build_type":"workflow"}'
+            code=$(cat /tmp/pages-code.txt)
+            if [ "$code" != "201" ] && [ "$code" != "200" ]; then
+              echo "::error::GitHub Pages is not enabled, and this token cannot create it (HTTP ${code}). A repo admin needs to open Settings → Pages and set Source to GitHub Actions: https://github.com/${REPO}/settings/pages"
+              exit 1
+            fi
           fi
-          pages_api PUT '{"build_type":"workflow","public":true}'
+          pages_api PUT '{"build_type":"workflow","public":true}' || true
 
       - name: Deploy to GitHub Pages
         id: deployment
