@@ -1,0 +1,145 @@
+:root {
+  color-scheme: light;
+  --paper: #f3efe6;
+  --ink: #2b2825;
+  --muted: #6a6258;
+  --line: #d5cdc1;
+  --field: rgba(255, 252, 247, 0.72);
+  --button: #3d4742;
+  --button-text: #f6f3ec;
+  --focus: #7d7468;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #1c1a18;
+    --ink: #ebe6de;
+    --muted: #b3aaa0;
+    --line: #3a352f;
+    --field: rgba(255, 250, 242, 0.04);
+    --button: #d9d1c5;
+    --button-text: #1c1a18;
+    --focus: #c4baad;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Songti SC", "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC",
+    "STSong", "PMingLiU", "SimSun", serif;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+button,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.75rem 1.25rem 1.5rem;
+}
+
+.panel {
+  width: min(100%, 26rem);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.85rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+}
+
+.subtitle {
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.after {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+textarea {
+  width: 100%;
+  min-height: 14rem;
+  padding: 1rem 1rem 1.1rem;
+  resize: vertical;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--field);
+  line-height: 1.85;
+}
+
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  margin-top: 1.75rem;
+}
+
+form .actions {
+  margin-top: 0;
+}
+
+button {
+  min-height: 2.75rem;
+  padding: 0.45rem 1.35rem;
+  border: 1px solid var(--button);
+  border-radius: 999px;
+  background: var(--button);
+  color: var(--button-text);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+button.quiet {
+  background: transparent;
+  color: var(--ink);
+}
+
+footer {
+  width: min(100%, 26rem);
+  margin: 2.5rem 0 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+}
