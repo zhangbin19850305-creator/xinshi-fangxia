@@ -8,8 +8,20 @@ const paths: Record<Screen, string> = {
   after: "/after",
 };
 
+function routeUrl(screen: Screen): string {
+  const route = paths[screen];
+  const base = import.meta.env.BASE_URL;
+  if (route === "/") return base;
+  return `${base.replace(/\/$/, "")}${route}`;
+}
+
 function screenFromPath(pathname: string): Screen {
-  const path = pathname.replace(/\/+$/, "") || "/";
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  let path = pathname;
+  if (base && (path === base || path.startsWith(`${base}/`))) {
+    path = path.slice(base.length) || "/";
+  }
+  path = path.replace(/\/+$/, "") || "/";
   if (path === "/put") return "put";
   if (path === "/after") return "after";
   return "entry";
@@ -27,8 +39,9 @@ export function App() {
   }, []);
 
   function go(next: Screen) {
-    if (window.location.pathname !== paths[next]) {
-      window.history.pushState(null, "", paths[next]);
+    const url = routeUrl(next);
+    if (window.location.pathname !== url) {
+      window.history.pushState(null, "", url);
     }
     setScreen(next);
   }

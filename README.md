@@ -26,3 +26,11 @@ npm run build
 ```bash
 npm run preview
 ```
+
+## 公开页面
+
+推到 `main` 后，GitHub Actions 会构建并发布到 GitHub Pages：
+
+https://zhangbin19850305-creator.github.io/xinshi-fangxia/
+
+Pages 构建使用站点前缀 `/xinshi-fangxia/`。本地 `npm run dev` 仍在 `/`。没有后端，页面内容默认不保存。
