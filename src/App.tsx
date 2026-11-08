@@ -1,4 +1,11 @@
 import { useEffect, useState } from "react";
+import {
+  browserStorage,
+  initAnalytics,
+  localDateString,
+  noteReturnVisit,
+  track,
+} from "./analytics";
 
 type Screen = "entry" | "put" | "after";
 
@@ -38,6 +45,22 @@ export function App() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  useEffect(() => {
+    initAnalytics();
+    if (noteReturnVisit(browserStorage(), localDateString()) === "return") {
+      track("return_visit");
+    }
+  }, []);
+
+  useEffect(() => {
+    // Ignore the extra StrictMode pass so a view is counted once.
+    const timer = window.setTimeout(() => {
+      if (screen === "entry") track("view_home");
+      if (screen === "put") track("view_put");
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [screen]);
+
   function go(next: Screen) {
     const url = routeUrl(next);
     if (window.location.pathname !== url) {
@@ -53,7 +76,10 @@ export function App() {
       {screen === "after" ? (
         <After onLeave={() => go("entry")} onAgain={() => go("put")} />
       ) : null}
-      <footer>这里不是心理咨询或医疗服务。</footer>
+      <footer>
+        <p>这里不是心理咨询或医疗服务。</p>
+        <p>只统计访问次数，不记录你写的内容。</p>
+      </footer>
     </div>
   );
 }
@@ -82,6 +108,7 @@ function PutDown({ onPut }: { onPut: () => void }) {
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          track("submit_put");
           setText("");
           onPut();
         }}
